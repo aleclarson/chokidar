@@ -156,7 +156,6 @@ inherits(FSWatcher, EventEmitter);
 // Returns the error if defined, otherwise the value of the
 // FSWatcher instance's `closed` flag
 FSWatcher.prototype._emit = function(event, path, val1, val2, val3) {
-  if (this.options.cwd) path = sysPath.relative(this.options.cwd, path);
   var args = [event, path];
   if (val3 !== undefined) args.push(val1, val2, val3);
   else if (val2 !== undefined) args.push(val1, val2);
@@ -221,8 +220,7 @@ FSWatcher.prototype._emit = function(event, path, val1, val2, val3) {
     this.options.alwaysStat && val1 === undefined &&
     (event === 'add' || event === 'addDir' || event === 'change')
   ) {
-    var fullPath = this.options.cwd ? sysPath.join(this.options.cwd, path) : path;
-    fs.stat(fullPath, function(error, stats) {
+    fs.stat(path, function(error, stats) {
       // Suppress event when fs.stat fails, to avoid sending undefined 'stat'
       if (error || !stats) return;
 
@@ -529,10 +527,8 @@ FSWatcher.prototype._remove = function(directory, item) {
   parent.remove(item);
 
   // If we wait for this file to be fully written, cancel the wait.
-  var relPath = path;
-  if (this.options.cwd) relPath = sysPath.relative(this.options.cwd, path);
-  if (this.options.awaitWriteFinish && this._pendingWrites[relPath]) {
-    var event = this._pendingWrites[relPath].cancelWait();
+  if (this.options.awaitWriteFinish && this._pendingWrites[path]) {
+    var event = this._pendingWrites[path].cancelWait();
     if (event === 'add') return;
   }
 
