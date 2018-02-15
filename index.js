@@ -335,11 +335,10 @@ FSWatcher.prototype._awaitWriteFinish = function(path, threshold, event, awfEmit
 // Private method: Determines whether user has asked to ignore this path
 //
 // * path  - string, path to file or directory
-// * stats - object, result of fs.stat
 //
 // Returns boolean
 var dotRe = /\..*\.(sw[px])$|\~$|\.subl.*\.tmp/;
-FSWatcher.prototype._isIgnored = function(path, stats) {
+FSWatcher.prototype._isIgnored = function(path) {
   if (this.options.atomic && dotRe.test(path)) return true;
 
   if (!this._userIgnored) {
@@ -356,7 +355,7 @@ FSWatcher.prototype._isIgnored = function(path, stats) {
     this._userIgnored = anymatch(paths);
   }
 
-  return this._userIgnored([path, stats]);
+  return this._userIgnored(path);
 };
 
 // Private method: Provides a set of common helpers and properties relating to
