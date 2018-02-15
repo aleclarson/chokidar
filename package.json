@@ -1,6 +1,6 @@
 {
   "name": "chokidar",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "scripts": {
     "test": "istanbul test node_modules/mocha/bin/_mocha",
     "ci-test": "istanbul cover _mocha && cat ./coverage/lcov.info | coveralls"
